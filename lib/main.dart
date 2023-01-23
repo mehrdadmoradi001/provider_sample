@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:provider_sample/main_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,6 +29,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => MainProvider(),
+      child: Consumer<MainProvider>(
+        builder: ((context, mainProvider, child) =>
+            _getWidgets(context, mainProvider)
+        ),
+      ),
+    );
+  }
+
+  Widget _getWidgets(BuildContext context, MainProvider provider) {
     return Scaffold(
       body: Center(
         child: Column(
@@ -36,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$_counter',
+              '${provider.counter}',
               style: Theme.of(context).textTheme.headline4,
             ),
           ],
@@ -44,9 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            _counter++;
-          });
+          provider.counter = ++provider.counter;
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
